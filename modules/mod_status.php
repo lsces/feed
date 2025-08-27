@@ -12,9 +12,12 @@
 /**
  * global defs
  */
+namespace Bitweaver\Feed;
+use Bitweaver\Liberty\LibertyComment;
+
 global $gQueryUser,$gBitSmarty;
 
-require_once( FEED_PKG_INCLUDE_PATH.'feed_lib.php' );
+require_once FEED_PKG_INCLUDE_PATH . 'feed_lib.php';
 
 if( !empty( $_REQUEST['feed_status'] ) ){
 	
@@ -23,7 +26,7 @@ if( !empty( $_REQUEST['feed_status'] ) ){
 }
 
 if( !empty( $moduleParams['module_params']['no_link_user'] ) ) {
-	$listHash['no_link_user'] = TRUE;
+	$listHash['no_link_user'] = true;
 }
 if( !empty( $moduleParams['module_rows'] ) ) {
 	$listHash['max_records'] = $moduleParams['module_rows'];
@@ -31,14 +34,10 @@ if( !empty( $moduleParams['module_rows'] ) ) {
 	$listHash['max_records'] = $moduleParams['module_params']['max_records'];
 }
 
-if( !empty( $moduleParams['module_params']['user_id'] ) ){
-	$listHash['user_id'] = $moduleParams['module_params']['user_id'];
-}else{
-	$listHash['user_id'] = $gQueryUser->mUserId;
-}
+$listHash['user_id'] = ( !empty( $moduleParams['module_params']['user_id'] ) ) ? $moduleParams['module_params']['user_id'] : $gQueryUser->mUserId;
 
 $statuses = feed_get_status( $listHash );
-$_template->tpl_vars['statuses'] = new Smarty_variable( $statuses);
+$gBitSmarty->assign( 'statuses', $statuses);
 
 foreach ($statuses as $status){
 
@@ -57,10 +56,7 @@ foreach ($statuses as $status){
 		
 		$statuses = feed_get_status( $listHash );
 
-		$_template->tpl_vars['statuses'] = new Smarty_variable( $statuses);
+		$gBitSmarty->assign( 'statuses', $statuses);
 		break;
 	}
 }
-
-?>
-

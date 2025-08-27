@@ -11,10 +11,11 @@
 /**
  * required setup
  */
-require_once( LIBERTY_PKG_CLASS_PATH.'LibertyComment.php' );
+namespace Bitweaver\Feed;
+use Bitweaver\Liberty\LibertyComment;
+use Bitweaver\Users\RoleUser;
 
 define( 'FEEDSTATUS_CONTENT_TYPE_GUID','feedstatus');
-
 
 /**
  * FeedStatus
@@ -25,7 +26,7 @@ class FeedStatus extends LibertyComment {
 	/**
 	* During initialisation, be sure to call our base constructors
 	**/
-	function FeedStatus($pCommentId = NULL, $pContentId = NULL, $pInfo = NULL) {
+	public function FeedStatus($pCommentId = null, $pContentId = null, $pInfo = null) {
 		
 		LibertyComment::LibertyComment($pCommentId,$pContentId,$pInfo);
 	
@@ -36,14 +37,14 @@ class FeedStatus extends LibertyComment {
 */
 		
 		$this->mContentTypeGuid = FEEDSTATUS_CONTENT_TYPE_GUID;
-		$this->registerContentType( FEEDSTATUS_CONTENT_TYPE_GUID, array(
+		$this->registerContentType( FEEDSTATUS_CONTENT_TYPE_GUID, [
 				'content_type_guid' => FEEDSTATUS_CONTENT_TYPE_GUID,
 				'content_name' => 'Feed Status',
 				'handler_class' => 'FeedStatus',
 				'handler_package' => 'feed',
 				'handler_file' => 'FeedStatus.php',
 				'maintainer_url' => 'http://www.bitweaver.org'
-			) );
+			] );
 /*
 		$this->mViewContentPerm  = 'p_loc_view';
 		$this->mCreateContentPerm  = 'p_loc_edit';
@@ -52,15 +53,14 @@ class FeedStatus extends LibertyComment {
 */
 	}
 	
-	function getThumbnailUrl($pSize = 'avatar', $pInfoHash = NULL){
-		$rootUser = new BitUser(NULL,$this->mInfo['root_id']);
+	public function getThumbnailUrl( string $pSize = 'avatar', ?array $pInfoHash = null, ?int $pSecondaryId = null, ?int $pDefault = null ): string|null {
+		$rootUser = new RoleUser(null,$this->mInfo['root_id']);
 		$rootUser->load();
 		$thumbnailUrl = $rootUser->getThumbnailUrl( $pSize );
 		if( empty ($thumbnailUrl) ){
-			$thumbnailUrl = USERS_PKG_URL.'icons/silhouette.png';
+			$thumbnailUrl = USERS_PKG_PATH.'icons/silhouette.png';
 		}
 		return $thumbnailUrl;
 	}
 
 }
-?>

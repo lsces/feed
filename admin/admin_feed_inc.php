@@ -2,7 +2,6 @@
 
 global $gBitSmarty;
 
-
 $contentTypes = get_content_types();
 
 if( !empty( $_REQUEST['store_feed'] ) ) {
@@ -13,14 +12,14 @@ if( !empty( $_REQUEST['store_feed'] ) ) {
 	foreach ( array_keys( $contentTypes ) as $type ){
 		if( !empty( $_REQUEST[$type]['conjugation_phrase'] ) || !empty( $_REQUEST[$type]['is_target_linked'] ) ) {
 			$insertSql = "INSERT INTO feed_conjugation (content_type_guid, conjugation_phrase, is_target_linked) VALUES ( ?, ?, ?)";
-			$gBitDb->query($insertSql, array( $type, $_REQUEST[$type]['conjugation_phrase'], empty($_REQUEST[$type]['is_target_linked'])?'y' : NULL ) );	
+			$gBitDb->query($insertSql, array( $type, $_REQUEST[$type]['conjugation_phrase'], empty($_REQUEST[$type]['is_target_linked'])?'y' : null ) );	
 		}
 	}
 
 }
 
 $contentTypes = get_content_types();
-$gBitSmarty->assignByRef('contentTypes',$contentTypes);
+$gBitSmarty->assign('contentTypes',$contentTypes);
 
 
 
@@ -31,5 +30,3 @@ function get_content_types(){
 	return $contentTypes;
 
 }
-
-?>

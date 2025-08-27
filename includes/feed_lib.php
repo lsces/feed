@@ -12,11 +12,18 @@
 /**
  * feed_get_actions
  */
+namespace Bitweaver\Feed;
+use Bitweaver\BitBase;
+use Bitweaver\KernelTools;
+use Bitweaver\Liberty\LibertyContent;
+use Bitweaver\Liberty\LibertyComment;
+use Bitweaver\Users\RoleUser;
+
 function feed_get_actions( $pListHash ) {
 	global $gBitDb;
 
 	$whereSql = '';
-	$bindVars = array();
+	$bindVars = [];
 
 	BitBase::prepGetList( $pListHash );
 	if( !empty( $pListHash['user_id'] ) ) {
@@ -38,14 +45,14 @@ function feed_get_actions( $pListHash ) {
 	$conjugationQuery = "SELECT * FROM feed_conjugation";
 	$overrides = $gBitDb->getAssoc( $conjugationQuery );
 
-	$actions = array();
+	$actions = [];
 	
 	//loop through directed actions
 	while ( $action = $res->fetchRow() ){
 		if( !empty($action['content_id']) ) { //indicates that this isn't a direct action, more of a "status update" ex. "Ronald is pleased with his artwork"
 			if( $content = LibertyContent::getLibertyObject($action['content_id']) ) {
 				$contentType = $content->getContentType();
-				$action['real_log'] = BitUser::getDisplayNameFromHash( $action, empty( $pListHash['no_link_user'] ) ).' ';
+				$action['real_log'] = RoleUser::getDisplayNameFromHash( $action, empty( $pListHash['no_link_user'] ) ).' ';
 				if(!empty($overrides[strtolower($contentType)])){
 					$action['real_log'] .= $overrides[$contentType]['conjugation_phrase'];
 					if($overrides[$contentType]['is_target_linked'] == 'y'){
@@ -55,7 +62,7 @@ function feed_get_actions( $pListHash ) {
 						 $action['feed_icon_url'] = $overrides[$contentType]['feed_icon_url'];
 					}
 				}else{
-					$action['real_log'] .= tra( 'edited' ).' <a href="'.$content->getDisplayUrl().'">'.$content->getTitle().'</a>';
+					$action['real_log'] .= KernelTools::tra( 'edited' ).' <a href="'.$content->getDisplayUrl().'">'.$content->getTitle().'</a>';
 				}			
 			} else {
 				unset( $action ); //invalid content_id
@@ -77,8 +84,8 @@ function feed_get_status( $pListHash ){
 	global $gBitDb;
 
 	$whereSql = '';
-	$bindVars = array();
-	$statuses = array();
+	$bindVars = [];
+	$statuses = [];
 
 	BitBase::prepGetList( $pListHash );
 	if( !empty( $pListHash['user_id'] ) ) {
@@ -99,7 +106,7 @@ function feed_get_status( $pListHash ){
 
 	$res = $gBitDb->query( $query, $bindVars, $pListHash['max_records'] );
 
-	$user = new BitUser($pListHash['user_id']);	
+	$user = new RoleUser($pListHash['user_id']);	
 	$user->load();
 	
 	
@@ -111,12 +118,12 @@ function feed_get_status( $pListHash ){
 		
 		$status['feed_icon_url'] = $avatarUrl;
 		
-		$comment = new LibertyComment(NULL,$status['content_id']);
+		$comment = new LibertyComment(null,$status['content_id']);
 		$replies = $comment->getComments($status['content_id'],null,null,'commentDate_asc');
 		$status['replies'] = $replies;
 		
 		foreach ( $status['replies'] as &$reply ){
-			$replyUser = new BitUser($reply['user_id']);
+			$replyUser = new RoleUser($reply['user_id']);
 			$replyUser->load();
 			$replyAvatarUrl = $replyUser->getThumbnailUrl();
 			if(empty($replyAvatarUrl)){
@@ -155,8 +162,6 @@ function feed_set_status( $pParamHash ){
 
 	global $gBitDb;
 	
-	require_once ( FEED_PKG_CLASSES_PATH.'FeedStatus.php');
-	
 	$status = new FeedStatus();
 
 	global $gBitUser;
@@ -170,6 +175,3 @@ function feed_set_status( $pParamHash ){
 	$status->storeComment($pParamHash);
 
 }
-
-
-?>

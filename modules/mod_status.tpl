@@ -1,5 +1,5 @@
 {literal}
-<script type="text/javascript">
+<script>
 
 function showHideReplies( contentId , total , feedback ){
 
