@@ -43,7 +43,7 @@ class FeedStatus extends LibertyComment {
 				'handler_class' => 'FeedStatus',
 				'handler_package' => 'feed',
 				'handler_file' => 'FeedStatus.php',
-				'maintainer_url' => 'http://www.bitweaver.org'
+				'maintainer_url' => 'https://www.bitweaver.org'
 			] );
 /*
 		$this->mViewContentPerm  = 'p_loc_view';
