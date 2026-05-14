@@ -13,6 +13,7 @@
  * global defs
  */
 namespace Bitweaver\Feed;
+
 use Bitweaver\Liberty\LibertyComment;
 
 global $gQueryUser,$gBitSmarty;
@@ -20,9 +21,9 @@ global $gQueryUser,$gBitSmarty;
 require_once FEED_PKG_INCLUDE_PATH . 'feed_lib.php';
 
 if( !empty( $_REQUEST['feed_status'] ) ){
-	
+
 	$pParamHash['status_message'] = $_REQUEST['feed_status'];
-	feed_set_status($pParamHash);		
+	feed_set_status($pParamHash);
 }
 
 if( !empty( $moduleParams['module_params']['no_link_user'] ) ) {
@@ -53,7 +54,7 @@ foreach ($statuses as $status){
 		$pParamHash['title'] = substr($_REQUEST[$commentContentId],0,20);
 
 		$reply->storeComment($pParamHash);
-		
+
 		$statuses = feed_get_status( $listHash );
 
 		$gBitSmarty->assign( 'statuses', $statuses);

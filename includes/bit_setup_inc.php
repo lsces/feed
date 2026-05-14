@@ -12,7 +12,6 @@ define( 'FEED_PKG_PATH', BIT_ROOT_PATH . basename( $pRegisterHash['package_path'
 define( 'FEED_PKG_INCLUDE_URL', BIT_ROOT_PATH . basename( $pRegisterHash['package_path'] ) . '/includes/');
 $gBitSystem->registerPackage( $pRegisterHash );
 
-
 if( $gBitSystem->isPackageActive( 'feed' ) ) {
 	if( $gBitUser->hasPermission( 'p_feed_view' )) {
 		$menuHash = [

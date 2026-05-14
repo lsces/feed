@@ -13,6 +13,7 @@
  * feed_get_actions
  */
 namespace Bitweaver\Feed;
+
 use Bitweaver\BitBase;
 use Bitweaver\KernelTools;
 use Bitweaver\Liberty\LibertyContent;
@@ -46,7 +47,7 @@ function feed_get_actions( $pListHash ) {
 	$overrides = $gBitDb->getAssoc( $conjugationQuery );
 
 	$actions = [];
-	
+
 	//loop through directed actions
 	while ( $action = $res->fetchRow() ){
 		if( !empty($action['content_id']) ) { //indicates that this isn't a direct action, more of a "status update" ex. "Ronald is pleased with his artwork"
@@ -63,7 +64,7 @@ function feed_get_actions( $pListHash ) {
 					}
 				}else{
 					$action['real_log'] .= KernelTools::tra( 'edited' ).' <a href="'.$content->getDisplayUrl().'">'.$content->getTitle().'</a>';
-				}			
+				}
 			} else {
 				unset( $action ); //invalid content_id
 			}
@@ -106,22 +107,21 @@ function feed_get_status( $pListHash ){
 
 	$res = $gBitDb->query( $query, $bindVars, $pListHash['max_records'] );
 
-	$user = new RoleUser($pListHash['user_id']);	
+	$user = new RoleUser($pListHash['user_id']);
 	$user->load();
-	
-	
+
 	while ( $status = $res->fetchRow() ){
 		$avatarUrl = $user->getThumbnailUrl();
 		if(empty($avatarUrl)){
 			$avatarUrl = USERS_PKG_URI."icons/silhouette.png";
 		}
-		
+
 		$status['feed_icon_url'] = $avatarUrl;
-		
+
 		$comment = new LibertyComment(null,$status['content_id']);
 		$replies = $comment->getComments($status['content_id'],null,null,'commentDate_asc');
 		$status['replies'] = $replies;
-		
+
 		foreach ( $status['replies'] as &$reply ){
 			$replyUser = new RoleUser($reply['user_id']);
 			$replyUser->load();
@@ -145,9 +145,9 @@ function feed_get_status( $pListHash ){
 					break;
 				}
 				$i++;
-			}	
+			}
 		}
-		$statuses[] = $status;	
+		$statuses[] = $status;
 	}
 
 	return $statuses;
@@ -155,13 +155,12 @@ function feed_get_status( $pListHash ){
 
 function feed_get_status_and_actions( $pParamHash ) {
 
-
 }
 
 function feed_set_status( $pParamHash ){
 
 	global $gBitDb;
-	
+
 	$status = new FeedStatus();
 
 	global $gBitUser;

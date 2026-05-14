@@ -17,5 +17,4 @@ if( !empty($gQueryUser) ){
 	$actions = feed_get_actions( $listHash );
 	$gBitSmarty->assign( 'actions', $actions);
 
-
 }
